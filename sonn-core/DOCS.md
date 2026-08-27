@@ -1,7 +1,7 @@
 # sonn-core
 
-This app runs the published `ghcr.io/sonn-audio/core:latest` image with host
-networking. Host networking is required for reliable discovery of Sonos,
+This app runs the published `ghcr.io/sonn-audio/core:beta-latest` image with
+host networking. Host networking is required for reliable discovery of Sonos,
 Chromecast, AirPlay, and DLNA devices.
 
 Open the web interface at port **7090** after starting the app. The Loxone

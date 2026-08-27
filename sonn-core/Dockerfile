@@ -1,1 +1,1 @@
-FROM ghcr.io/sonn-audio/core:latest
+FROM ghcr.io/sonn-audio/core:beta-latest
