@@ -10,7 +10,7 @@ startup: application
 boot: auto
 host_network: true
 init: false
-webui: http://[HOST]:7090
+webui: http://[HOST]:[PORT:7090]
 map:
   - type: addon_config
     read_only: false
