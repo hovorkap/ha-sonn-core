@@ -4,6 +4,8 @@ This repository provides a Home Assistant app that runs
 [sonn-core](https://sonn-audio.github.io/docs/) (Loxone Music Server
 emulation).
 
+![sonn-core icon](sonn-core/icon.png)
+
 ## Installation
 
 1. In Home Assistant, open **Settings → Apps → App store**.
