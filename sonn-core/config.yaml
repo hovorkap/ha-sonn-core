@@ -1,0 +1,17 @@
+name: sonn-core
+version: 0.1.0
+slug: sonn-core
+description: Loxone Music Server emulation powered by sonn-audio/core
+url: https://sonn-audio.github.io/docs/
+arch:
+  - amd64
+  - aarch64
+startup: application
+boot: auto
+host_network: true
+image: ghcr.io/sonn-audio/core:latest
+webui: http://[HOST]:7090
+map:
+  - type: addon_config
+    read_only: false
+    path: /app/data
