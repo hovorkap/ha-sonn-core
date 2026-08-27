@@ -1,0 +1,11 @@
+This repository packages and configures the sonn-core project maintained by
+sonn-audio and its contributors:
+
+  https://github.com/sonn-audio/core
+
+The upstream sonn-core project is created by Rudy Berends and contributors.
+The upstream project and its container image retain their own copyright,
+license, and attribution notices. See the upstream repository for the
+applicable terms:
+
+  https://github.com/sonn-audio/core/blob/main/LICENSE
