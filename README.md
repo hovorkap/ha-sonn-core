@@ -17,7 +17,7 @@ Current app version in this repository:
 
 ## Installation
 
-1. In Home Assistant, open **Settings → Apps → App store**.
+1. In Home Assistant, open **Settings → Apps → Install app**.
 2. Open the menu in the top-right and choose **Repositories**.
 3. Add this repository URL:
    `https://github.com/hovorkap/ha-sonn-core`
