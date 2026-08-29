@@ -60,6 +60,11 @@ jobs:
           version="${tag#v}"
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "channel=$CHANNEL" >> "$GITHUB_OUTPUT"
+          if [ "$CHANNEL" = "stable" ]; then
+            echo "image_tag=latest" >> "$GITHUB_OUTPUT"
+          else
+            echo "image_tag=$version" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Update app metadata and image
         id: update
@@ -67,11 +72,12 @@ jobs:
           APP_DIR: ${{ matrix.app_dir }}
           README_LABEL: ${{ matrix.readme_label }}
           VERSION: ${{ steps.release.outputs.version }}
+          IMAGE_TAG: ${{ steps.release.outputs.image_tag }}
         run: |
           set -euo pipefail
 
           sed -i -E "s/^version: .*/version: $VERSION/" "$APP_DIR/config.yaml"
-          sed -i -E "s|^FROM ghcr.io/sonn-audio/core:.*|FROM ghcr.io/sonn-audio/core:$VERSION|" "$APP_DIR/Dockerfile"
+          sed -i -E "s|^FROM ghcr.io/sonn-audio/core:.*|FROM ghcr.io/sonn-audio/core:$IMAGE_TAG|" "$APP_DIR/Dockerfile"
           sed -i -E "s/^The $README_LABEL app tracks sonn-audio\/core \*\*.*\*\*\.$/The $README_LABEL app tracks sonn-audio\/core **$VERSION**./" README.md
           if ! grep -q "^## $VERSION$" "$APP_DIR/CHANGELOG.md"; then
             sed -i -E "0,/^## /s//## $VERSION\n\n- Track the sonn-audio\/core $VERSION release.\n\n## /" "$APP_DIR/CHANGELOG.md"

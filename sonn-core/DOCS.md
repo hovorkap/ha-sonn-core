@@ -1,8 +1,8 @@
 # sonn-core
 
-This stable app runs the published `ghcr.io/sonn-audio/core:3.1.0` image with
-host networking. Host networking is required for reliable discovery of Sonos,
-Chromecast, AirPlay, and DLNA devices.
+This stable app tracks sonn-audio/core release **3.1.0** and runs the
+published stable image `ghcr.io/sonn-audio/core:latest`. Host networking is
+required for reliable discovery of Sonos, Chromecast, AirPlay, and DLNA devices.
 
 The beta channel is available from the same repository by adding `#beta` to
 the repository URL:

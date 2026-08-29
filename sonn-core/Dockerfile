@@ -1,4 +1,4 @@
-FROM ghcr.io/sonn-audio/core:3.1.0
+FROM ghcr.io/sonn-audio/core:latest
 
 RUN mkdir -p /opt/sonn-public \
     && cp -a /app/public/. /opt/sonn-public/
