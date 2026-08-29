@@ -1,25 +1,19 @@
 # sonn-audio Home Assistant app repository
 
-This repository provides Home Assistant apps that run
+This repository provides a Home Assistant app that runs
 [sonn-core](https://sonn-audio.github.io/docs/) (Loxone Music Server
 emulation).
 
-The repository publishes three app channels:
+The repository currently publishes a single beta app:
 
-- **Latest** tracks the current stable sonn-core release and uses the upstream
-  `latest` image tag, falling back to `latest-beta` if needed.
-- **Beta** tracks the newest prerelease and uses the upstream `beta-latest`
-  image tag.
-- **Canary** tracks the newest prerelease track and uses the upstream
-  `dev-latest` image tag.
+- **sonn-core Beta** tracks the latest beta release and uses the upstream
+  `ghcr.io/sonn-audio/core:beta` image tag.
 
-Current app versions in this repository:
+Current app version in this repository:
 
-- Latest app: **3.1.0**
 - Beta app: **4.0.0-beta.19**
-- Canary app: **4.0.0-beta.19**
 
-![sonn-core icon](sonn-core/icon.png)
+![sonn-core icon](sonn-core-beta/icon.png)
 
 ## Installation
 
@@ -27,12 +21,11 @@ Current app versions in this repository:
 2. Open the menu in the top-right and choose **Repositories**.
 3. Add this repository URL:
    `https://github.com/hovorkap/ha-sonn-core`
-4. Install one of the app entries from the repository: **sonn-core Latest**,
-   **sonn-core Beta**, or **sonn-core Canary**.
+4. Install **sonn-core Beta** from the repository.
 
-Each app uses its own Home Assistant app configuration folder and its own
-`/app/data` and `/app/public` persistence area. This keeps each channel's
-configuration, cache, and UI bundle separate.
+The app uses its own Home Assistant app configuration folder, persisting
+`/app/data` and `/app/public` so the config and UI bundle survive app
+updates.
 
 The app uses host networking because sonn-core discovers Sonos, Chromecast,
 AirPlay, and DLNA devices on the local network.
