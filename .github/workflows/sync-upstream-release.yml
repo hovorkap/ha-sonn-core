@@ -61,10 +61,12 @@ jobs:
 
           case "$CHANNEL" in
             latest)
-              release_filter='select(.prerelease == false)'
+              stable_release_filter='select(.prerelease == false)'
+              prerelease_filter='select(.prerelease == true)'
               ;;
             beta|canary)
-              release_filter='select(.prerelease == true)'
+              stable_release_filter='select(.prerelease == false)'
+              prerelease_filter='select(.prerelease == true)'
               ;;
             *)
               echo "Unknown channel: $CHANNEL"
@@ -76,33 +78,41 @@ jobs:
             -H 'Accept: application/vnd.github+json' \
             -H "Authorization: Bearer $GH_TOKEN" \
             'https://api.github.com/repos/sonn-audio/core/releases?per_page=100')"
-          tag="$(printf '%s' "$release_json" | jq -r \
-            "[.[] | $release_filter | select(.draft == false)][0].tag_name")"
 
-          if [ -z "$tag" ] || [ "$tag" = "null" ]; then
-            echo "No $CHANNEL upstream release found."
-            exit 1
-          fi
-
-          version="${tag#v}"
-          echo "version=$version" >> "$GITHUB_OUTPUT"
-          echo "channel=$CHANNEL" >> "$GITHUB_OUTPUT"
+          stable_tag="$(printf '%s' "$release_json" | jq -r \
+            "[.[] | $stable_release_filter | select(.draft == false)][0].tag_name")"
+          prerelease_tag="$(printf '%s' "$release_json" | jq -r \
+            "[.[] | $prerelease_filter | select(.draft == false)][0].tag_name")"
 
           if [ "$CHANNEL" = "latest" ]; then
             if ghcr_manifest_exists latest; then
               image_tag="latest"
+              version="${stable_tag#v}"
             elif ghcr_manifest_exists latest-beta; then
               image_tag="latest-beta"
+              version="${prerelease_tag#v}"
             else
-              echo "No published stable GHCR image tag found for release $version."
+              echo "No published stable GHCR image tag found for the latest channel."
               exit 1
             fi
           elif [ "$CHANNEL" = "beta" ]; then
+            if [ -z "$prerelease_tag" ] || [ "$prerelease_tag" = "null" ]; then
+              echo "No prerelease upstream release found for beta."
+              exit 1
+            fi
             image_tag="beta-latest"
+            version="${prerelease_tag#v}"
           else
+            if [ -z "$prerelease_tag" ] || [ "$prerelease_tag" = "null" ]; then
+              echo "No prerelease upstream release found for canary."
+              exit 1
+            fi
             image_tag="dev-latest"
+            version="${prerelease_tag#v}"
           fi
 
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "channel=$CHANNEL" >> "$GITHUB_OUTPUT"
           echo "image_tag=$image_tag" >> "$GITHUB_OUTPUT"
 
       - name: Update app metadata and image
