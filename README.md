@@ -4,7 +4,7 @@ This repository provides a Home Assistant app that runs
 [sonn-core](https://sonn-audio.github.io/docs/) (Loxone Music Server
 emulation).
 
-The `main` branch tracks sonn-audio/core **3.1.0**.
+The `beta` branch tracks sonn-audio/core **4.0.0-beta.19**.
 
 ![sonn-core icon](sonn-core/icon.png)
 

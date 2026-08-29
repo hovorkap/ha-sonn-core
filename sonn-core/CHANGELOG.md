@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.0.0-beta.19
+
+- Track the beta sonn-audio/core 4.0.0-beta.19 release.
+
 ## 3.1.0
 
 - Track the stable sonn-audio/core 3.1.0 release.
