@@ -17,6 +17,11 @@ recreates the container during an app update. On first startup, the bundled
 missing public files are copied into that directory without overwriting
 existing files.
 
+Note: sonn-core may internally update Node native dependencies such as
+`@sonn-audio/node-libraop`. This requires the build toolchain to be present in
+the addon image, which is included here so app-managed updates can complete
+without failing during `node-gyp rebuild`.
+
 Open the web interface at port **7090** after starting the app. The Loxone
 protocols use ports **7091** and **7095** when enabled in sonn-core.
 
