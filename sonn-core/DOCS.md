@@ -16,10 +16,10 @@ and other runtime state. It is available under the app's configuration folder
 on the Home Assistant host and can be edited manually. Stop the app before
 editing `config.json`, because the running admin panel can overwrite it.
 
-The admin UI and player bundles are also mapped separately to the app
-configuration folder. This preserves updates made from sonn-core's admin panel
-when Home Assistant recreates the container during an app update. On first
-startup, the bundled versions are copied into those folders automatically.
+The complete `/app/public` directory is mapped to the app configuration folder.
+This preserves updates made from sonn-core's admin panel when Home Assistant
+recreates the container during an app update. On first startup, the bundled
+admin UI and player files are copied into that directory automatically.
 
 Open the web interface at port **7090** after starting the app. The Loxone
 protocols use ports **7091** and **7095** when enabled in sonn-core.

@@ -17,7 +17,4 @@ map:
     path: /app/data
   - type: addon_config
     read_only: false
-    path: /app/public/admin
-  - type: addon_config
-    read_only: false
-    path: /app/public/player
+    path: /app/public
