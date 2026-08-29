@@ -1,0 +1,57 @@
+#include <tunables/global>
+
+profile sonn-core-beta flags=(attach_disconnected,mediate_deleted) {
+  #include <abstractions/base>
+  #include <abstractions/nameservice>
+
+  # Capabilities
+  capability net_bind_service,
+  capability setgid,
+  capability setuid,
+  file,
+  signal (send) set=(kill,term,int,hup,cont),
+
+  # S6-Overlay and container runtime
+  /init ix,
+  /bin/** ix,
+  /usr/bin/** ix,
+  /usr/local/bin/** ix,
+  /usr/local/lib/** ix,
+  /etc/services.d/** rwix,
+  /etc/cont-init.d/** rwix,
+  /etc/cont-finish.d/** rwix,
+  /run/{,**} rwk,
+  /tmp/** rwk,
+
+  # App files and runtime data
+  /app/** rwk,
+  /app/data/** rw,
+  /app/public/** rw,
+  /app/node_modules/** r,
+  /app/dist/** r,
+
+  # Home Assistant app mappings
+  /data/** rw,
+  /config/** rw,
+  /share/** rw,
+
+  # System access needed by Node and native modules
+  /etc/passwd r,
+  /etc/group r,
+  /etc/hosts r,
+  /etc/resolv.conf r,
+  /etc/nsswitch.conf r,
+  /etc/ssl/** r,
+  /etc/ld.so.cache r,
+  /dev/null rw,
+  /dev/urandom r,
+  /dev/tty rw,
+  /proc/** r,
+  /sys/** r,
+
+  # Node runtime
+  /usr/local/bin/node ix,
+  /usr/bin/env ix,
+  /bin/bash ix,
+  /usr/bin/bash ix,
+}
