@@ -5,7 +5,7 @@ This repository provides a Home Assistant app that runs
 emulation).
 
 The stable app tracks sonn-audio/core **3.1.0**.
-The canary app tracks sonn-audio/core **4.0.0-beta.19**.
+The beta app tracks sonn-audio/core **4.0.0-beta.19**.
 
 ![sonn-core icon](sonn-core/icon.png)
 
@@ -17,8 +17,8 @@ The canary app tracks sonn-audio/core **4.0.0-beta.19**.
    `https://github.com/hovorkap/ha-sonn-core`
 4. Install **sonn-core** from the repository.
 
-The repository publishes both a stable **sonn-core** app and a canary
-**sonn-core Canary** app. The canary app uses a separate configuration folder
+The repository publishes both a stable **sonn-core** app and a beta
+**sonn-core Beta** app. The beta app uses a separate configuration folder
 because it has a separate Home Assistant app slug.
 
 Each app persists sonn-core's configuration and data under its own Home

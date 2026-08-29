@@ -1,6 +1,6 @@
-name: sonn-core Canary
+name: sonn-core Beta
 version: 4.0.0-beta.19
-slug: sonn-core-canary
+slug: sonn-core-beta
 description: Loxone Music Server emulation powered by sonn-audio/core beta releases
 url: https://sonn-audio.github.io/docs/
 arch:

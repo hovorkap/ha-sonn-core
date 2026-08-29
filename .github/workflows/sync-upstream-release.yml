@@ -21,9 +21,9 @@ jobs:
           - app_dir: sonn-core
             channel: stable
             readme_label: stable
-          - app_dir: sonn-core-canary
+          - app_dir: sonn-core-beta
             channel: beta
-            readme_label: canary
+            readme_label: beta
     runs-on: ubuntu-latest
     steps:
       - name: Check out main branch
