@@ -1,11 +1,9 @@
-# sonn-core Latest
+# sonn-core Canary
 
-This app tracks sonn-audio/core release **3.1.0** and runs the published
-stable image `ghcr.io/sonn-audio/core:latest`. If that tag is missing, the
-sync workflow falls back to `ghcr.io/sonn-audio/core:latest-beta`.
-
-Host networking is required for reliable discovery of Sonos, Chromecast,
-AirPlay, and DLNA devices.
+This canary app tracks sonn-audio/core prerelease builds and runs the published
+`ghcr.io/sonn-audio/core:dev-latest` image with host networking. Host
+networking is required for reliable discovery of Sonos, Chromecast, AirPlay,
+and DLNA devices.
 
 ## Persistent files
 

@@ -1,11 +1,23 @@
 # sonn-audio Home Assistant app repository
 
-This repository provides a Home Assistant app that runs
+This repository provides Home Assistant apps that run
 [sonn-core](https://sonn-audio.github.io/docs/) (Loxone Music Server
 emulation).
 
-The stable app tracks sonn-audio/core **3.1.0**.
-The beta app tracks sonn-audio/core **4.0.0-beta.19**.
+The repository publishes three app channels:
+
+- **Latest** tracks the current stable sonn-core release and uses the upstream
+  `latest` image tag, falling back to `latest-beta` if needed.
+- **Beta** tracks the newest prerelease and uses the upstream `beta-latest`
+  image tag.
+- **Canary** tracks the newest prerelease track and uses the upstream
+  `dev-latest` image tag.
+
+Current app versions in this repository:
+
+- Latest app: **3.1.0**
+- Beta app: **4.0.0-beta.19**
+- Canary app: **4.0.0-beta.19**
 
 ![sonn-core icon](sonn-core/icon.png)
 
@@ -15,16 +27,12 @@ The beta app tracks sonn-audio/core **4.0.0-beta.19**.
 2. Open the menu in the top-right and choose **Repositories**.
 3. Add this repository URL:
    `https://github.com/hovorkap/ha-sonn-core`
-4. Install **sonn-core** from the repository.
+4. Install one of the app entries from the repository: **sonn-core Latest**,
+   **sonn-core Beta**, or **sonn-core Canary**.
 
-The repository publishes both a stable **sonn-core** app and a beta
-**sonn-core Beta** app. The beta app uses a separate configuration folder
-because it has a separate Home Assistant app slug.
-
-Each app persists sonn-core's configuration and data under its own Home
-Assistant app configuration folder, including `config.json`. Its admin UI and
-player bundles are persisted there as well, so UI updates made from sonn-core
-survive an app image update.
+Each app uses its own Home Assistant app configuration folder and its own
+`/app/data` and `/app/public` persistence area. This keeps each channel's
+configuration, cache, and UI bundle separate.
 
 The app uses host networking because sonn-core discovers Sonos, Chromecast,
 AirPlay, and DLNA devices on the local network.

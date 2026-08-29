@@ -19,11 +19,14 @@ jobs:
       matrix:
         include:
           - app_dir: sonn-core
-            channel: stable
-            readme_label: stable
+            channel: latest
+            readme_label: Latest
           - app_dir: sonn-core-beta
             channel: beta
-            readme_label: beta
+            readme_label: Beta
+          - app_dir: sonn-core-canary
+            channel: canary
+            readme_label: Canary
     runs-on: ubuntu-latest
     steps:
       - name: Check out main branch
@@ -56,15 +59,23 @@ jobs:
             [ "$status" = "200" ]
           }
 
-          if [ "$CHANNEL" = "beta" ]; then
-            release_filter='select(.prerelease == true)'
-          else
-            release_filter='select(.prerelease == false)'
-          fi
+          case "$CHANNEL" in
+            latest)
+              release_filter='select(.prerelease == false)'
+              ;;
+            beta|canary)
+              release_filter='select(.prerelease == true)'
+              ;;
+            *)
+              echo "Unknown channel: $CHANNEL"
+              exit 1
+              ;;
+          esac
 
-          release_json="$(gh api \
+          release_json="$(curl -fsSL \
             -H 'Accept: application/vnd.github+json' \
-            '/repos/sonn-audio/core/releases?per_page=100')"
+            -H "Authorization: Bearer $GH_TOKEN" \
+            'https://api.github.com/repos/sonn-audio/core/releases?per_page=100')"
           tag="$(printf '%s' "$release_json" | jq -r \
             "[.[] | $release_filter | select(.draft == false)][0].tag_name")"
 
@@ -77,17 +88,19 @@ jobs:
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "channel=$CHANNEL" >> "$GITHUB_OUTPUT"
 
-          if [ "$CHANNEL" = "stable" ]; then
-            if ghcr_manifest_exists "$version"; then
-              image_tag="$version"
-            elif ghcr_manifest_exists latest; then
+          if [ "$CHANNEL" = "latest" ]; then
+            if ghcr_manifest_exists latest; then
               image_tag="latest"
+            elif ghcr_manifest_exists latest-beta; then
+              image_tag="latest-beta"
             else
-              echo "No published GHCR image tag found for stable release $version."
+              echo "No published stable GHCR image tag found for release $version."
               exit 1
             fi
+          elif [ "$CHANNEL" = "beta" ]; then
+            image_tag="beta-latest"
           else
-            image_tag="$version"
+            image_tag="dev-latest"
           fi
 
           echo "image_tag=$image_tag" >> "$GITHUB_OUTPUT"

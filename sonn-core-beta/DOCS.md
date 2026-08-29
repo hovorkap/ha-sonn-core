@@ -1,7 +1,7 @@
 # sonn-core Beta
 
 This beta app tracks sonn-audio/core release **4.0.0-beta.19** and runs the
-published beta image `ghcr.io/sonn-audio/core:4.0.0-beta.19` with host
+published beta image `ghcr.io/sonn-audio/core:beta-latest` with host
 networking. Host networking is required for reliable discovery of Sonos,
 Chromecast, AirPlay, and DLNA devices.
 
