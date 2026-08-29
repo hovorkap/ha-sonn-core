@@ -40,6 +40,22 @@ jobs:
         run: |
           set -euo pipefail
 
+          ghcr_manifest_exists() {
+            local tag="$1"
+            local token
+            token="$(curl -fsSL 'https://ghcr.io/token?scope=repository:sonn-audio/core:pull' | jq -r '.token // empty')"
+            if [ -z "$token" ]; then
+              return 1
+            fi
+
+            local status
+            status="$(curl -sS -o /tmp/ghcr-manifest.json -w '%{http_code}' \
+              -H "Authorization: Bearer $token" \
+              -H 'Accept: application/vnd.docker.distribution.manifest.v2+json' \
+              "https://ghcr.io/v2/sonn-audio/core/manifests/$tag")"
+            [ "$status" = "200" ]
+          }
+
           if [ "$CHANNEL" = "beta" ]; then
             release_filter='select(.prerelease == true)'
           else
@@ -60,11 +76,21 @@ jobs:
           version="${tag#v}"
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "channel=$CHANNEL" >> "$GITHUB_OUTPUT"
+
           if [ "$CHANNEL" = "stable" ]; then
-            echo "image_tag=latest" >> "$GITHUB_OUTPUT"
+            if ghcr_manifest_exists "$version"; then
+              image_tag="$version"
+            elif ghcr_manifest_exists latest; then
+              image_tag="latest"
+            else
+              echo "No published GHCR image tag found for stable release $version."
+              exit 1
+            fi
           else
-            echo "image_tag=$version" >> "$GITHUB_OUTPUT"
+            image_tag="$version"
           fi
+
+          echo "image_tag=$image_tag" >> "$GITHUB_OUTPUT"
 
       - name: Update app metadata and image
         id: update
