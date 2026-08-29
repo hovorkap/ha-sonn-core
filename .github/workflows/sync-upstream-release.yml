@@ -15,19 +15,22 @@ jobs:
   sync:
     strategy:
       fail-fast: false
+      max-parallel: 1
       matrix:
         include:
-          - branch: main
+          - app_dir: sonn-core
             channel: stable
-          - branch: beta
+            readme_label: stable
+          - app_dir: sonn-core-canary
             channel: beta
+            readme_label: canary
     runs-on: ubuntu-latest
     steps:
-      - name: Check out channel branch
+      - name: Check out main branch
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
-          ref: ${{ matrix.branch }}
+          ref: main
 
       - name: Find latest upstream release for this channel
         id: release
@@ -61,19 +64,20 @@ jobs:
       - name: Update app metadata and image
         id: update
         env:
-          BRANCH: ${{ matrix.branch }}
+          APP_DIR: ${{ matrix.app_dir }}
+          README_LABEL: ${{ matrix.readme_label }}
           VERSION: ${{ steps.release.outputs.version }}
         run: |
           set -euo pipefail
 
-          sed -i -E "s/^version: .*/version: $VERSION/" sonn-core/config.yaml
-          sed -i -E "s|^FROM ghcr.io/sonn-audio/core:.*|FROM ghcr.io/sonn-audio/core:$VERSION|" sonn-core/Dockerfile
-          sed -i -E "s/^The \`(main|beta)\` branch tracks sonn-audio\/core \*\*.*\*\*\.$/The \`$BRANCH\` branch tracks sonn-audio\/core **$VERSION**./" README.md
-          if ! grep -q "^## $VERSION$" sonn-core/CHANGELOG.md; then
-            sed -i -E "0,/^## /s//## $VERSION\n\n- Track the sonn-audio\/core $VERSION release.\n\n## /" sonn-core/CHANGELOG.md
+          sed -i -E "s/^version: .*/version: $VERSION/" "$APP_DIR/config.yaml"
+          sed -i -E "s|^FROM ghcr.io/sonn-audio/core:.*|FROM ghcr.io/sonn-audio/core:$VERSION|" "$APP_DIR/Dockerfile"
+          sed -i -E "s/^The $README_LABEL app tracks sonn-audio\/core \*\*.*\*\*\.$/The $README_LABEL app tracks sonn-audio\/core **$VERSION**./" README.md
+          if ! grep -q "^## $VERSION$" "$APP_DIR/CHANGELOG.md"; then
+            sed -i -E "0,/^## /s//## $VERSION\n\n- Track the sonn-audio\/core $VERSION release.\n\n## /" "$APP_DIR/CHANGELOG.md"
           fi
 
-          if git diff --quiet -- sonn-core; then
+          if git diff --quiet -- README.md "$APP_DIR"; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
@@ -82,7 +86,7 @@ jobs:
       - name: Commit and push update
         if: steps.update.outputs.changed == 'true'
         env:
-          BRANCH: ${{ matrix.branch }}
+          APP_DIR: ${{ matrix.app_dir }}
           CHANNEL: ${{ steps.release.outputs.channel }}
           VERSION: ${{ steps.release.outputs.version }}
         run: |
@@ -90,6 +94,6 @@ jobs:
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add README.md sonn-core
+          git add README.md "$APP_DIR"
           git commit -m "Update sonn-core $CHANNEL to $VERSION"
-          git push origin "HEAD:$BRANCH"
+          git push origin HEAD:main

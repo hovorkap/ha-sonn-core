@@ -1,0 +1,23 @@
+name: sonn-core Canary
+version: 4.0.0-beta.19
+slug: sonn-core-canary
+description: Loxone Music Server emulation powered by sonn-audio/core beta releases
+url: https://sonn-audio.github.io/docs/
+arch:
+  - amd64
+  - aarch64
+startup: application
+boot: auto
+host_network: true
+init: false
+webui: http://[HOST]:[PORT:7090]
+map:
+  - type: addon_config
+    read_only: false
+    path: /app/data
+  - type: addon_config
+    read_only: false
+    path: /app/public/admin
+  - type: addon_config
+    read_only: false
+    path: /app/public/player
