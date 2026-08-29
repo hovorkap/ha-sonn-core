@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.1.0
+
+- Track the stable sonn-audio/core 3.1.0 release.
+
 ## 0.1.4
 
 - Add the sonn-core icon to the Home Assistant app metadata.

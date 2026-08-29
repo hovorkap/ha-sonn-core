@@ -1,0 +1,95 @@
+name: Sync sonn-core release
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+  repository_dispatch:
+    types:
+      - upstream-release
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - branch: main
+            channel: stable
+          - branch: beta
+            channel: beta
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out channel branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ matrix.branch }}
+
+      - name: Find latest upstream release for this channel
+        id: release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CHANNEL: ${{ matrix.channel }}
+        run: |
+          set -euo pipefail
+
+          if [ "$CHANNEL" = "beta" ]; then
+            release_filter='select(.prerelease == true)'
+          else
+            release_filter='select(.prerelease == false)'
+          fi
+
+          release_json="$(gh api \
+            -H 'Accept: application/vnd.github+json' \
+            '/repos/sonn-audio/core/releases?per_page=100')"
+          tag="$(printf '%s' "$release_json" | jq -r \
+            "[.[] | $release_filter | select(.draft == false)][0].tag_name")"
+
+          if [ -z "$tag" ] || [ "$tag" = "null" ]; then
+            echo "No $CHANNEL upstream release found."
+            exit 1
+          fi
+
+          version="${tag#v}"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "channel=$CHANNEL" >> "$GITHUB_OUTPUT"
+
+      - name: Update app metadata and image
+        id: update
+        env:
+          BRANCH: ${{ matrix.branch }}
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          set -euo pipefail
+
+          sed -i -E "s/^version: .*/version: $VERSION/" sonn-core/config.yaml
+          sed -i -E "s|^FROM ghcr.io/sonn-audio/core:.*|FROM ghcr.io/sonn-audio/core:$VERSION|" sonn-core/Dockerfile
+          sed -i -E "s/^The \`(main|beta)\` branch tracks sonn-audio\/core \*\*.*\*\*\.$/The \`$BRANCH\` branch tracks sonn-audio\/core **$VERSION**./" README.md
+          if ! grep -q "^## $VERSION$" sonn-core/CHANGELOG.md; then
+            sed -i -E "0,/^## /s//## $VERSION\n\n- Track the sonn-audio\/core $VERSION release.\n\n## /" sonn-core/CHANGELOG.md
+          fi
+
+          if git diff --quiet -- sonn-core; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit and push update
+        if: steps.update.outputs.changed == 'true'
+        env:
+          BRANCH: ${{ matrix.branch }}
+          CHANNEL: ${{ steps.release.outputs.channel }}
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md sonn-core
+          git commit -m "Update sonn-core $CHANNEL to $VERSION"
+          git push origin "HEAD:$BRANCH"
