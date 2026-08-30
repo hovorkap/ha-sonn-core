@@ -30,9 +30,10 @@ profile sonn-core-beta flags=(attach_disconnected,mediate_deleted) {
   /app/node_modules/** r,
   /app/dist/** r,
 
-  # Home Assistant app mappings
-  /data/** rw,
+  # Home Assistant app mappings (real storage behind the /app/data and
+  # /app/public symlinks)
   /config/** rw,
+  /data/** rw,
   /share/** rw,
 
   # System access needed by Node and native modules

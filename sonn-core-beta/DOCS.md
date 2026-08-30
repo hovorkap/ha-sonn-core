@@ -5,17 +5,26 @@ published image `ghcr.io/sonn-audio/core:beta` with host networking.
 
 ## Persistent files
 
-The app configuration directory is mapped to sonn-core's `/app/data` directory.
-This includes `config.json`, credentials, databases, caches, library metadata,
-and other runtime state. It is available under the app's configuration folder
-on the Home Assistant host and can be edited manually. Stop the app before
-editing `config.json`, because the running admin panel can overwrite it.
+A single Home Assistant app configuration folder is mapped into the container
+at `/config`. On startup, the app splits this into two subdirectories:
 
-The complete `/app/public` directory is mapped to the app configuration folder.
-This preserves updates made from sonn-core's admin panel when Home Assistant
-recreates the container during an app update. On first startup, the bundled
-missing public files are copied into that directory without overwriting
-existing files.
+- `/config/data` — sonn-core's `config.json`, credentials, databases, caches,
+  library metadata, and other runtime state.
+- `/config/public` — sonn-core's admin UI and player web bundles, so UI
+  updates made from sonn-core survive an app image update.
+
+Inside the container, `/app/data` and `/app/public` are symlinks that point to
+these two folders. Both live under the same mapped host folder, but are kept
+in their own subdirectories so their contents never mix.
+
+Stop the app before editing `config.json` under `data/` manually, because the
+running admin panel can overwrite it.
+
+Note: earlier versions of this app mapped the same host folder directly at
+both `/app/data` and `/app/public`, which merged their contents together in
+one shared directory. The first time this version starts, it automatically
+splits any existing merged content into the new `data/` and `public/`
+subdirectories, so existing installations are migrated without data loss.
 
 Note: sonn-core may internally update Node native dependencies such as
 `@sonn-audio/node-libraop`. This requires the build toolchain to be present in
@@ -28,8 +37,9 @@ protocols use ports **7091** and **7095** when enabled in sonn-core.
 ## Persistent data
 
 The app configuration, library metadata, logs, and cache are stored in the
-Home Assistant app configuration directory and mounted into sonn-core as
-`/app/data`. Back up this directory to back up the sonn-core installation.
+Home Assistant app configuration directory, under `data/`, and mounted into
+sonn-core as `/app/data`. Back up the whole configuration folder to back up
+the sonn-core installation.
 
 ## Music library
 

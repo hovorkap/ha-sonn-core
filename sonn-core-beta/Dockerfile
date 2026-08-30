@@ -8,8 +8,9 @@ RUN apt-get update \
         make \
         python3 \
     && rm -rf /var/lib/apt/lists/* \
-    && mkdir -p /opt/sonn-public \
-    && cp -a /app/public/. /opt/sonn-public/
+    && mkdir -p /opt/sonn-public /opt/sonn-data \
+    && cp -a /app/public/. /opt/sonn-public/ \
+    && if [ -d /app/data ]; then cp -a /app/data/. /opt/sonn-data/; fi
 
 COPY run.sh /run.sh
 RUN chmod a+x /run.sh
