@@ -1,5 +1,12 @@
 # Changelog
 
+## 4.0.0-beta.19-r2
+
+- Fix startup crash "failed to preserve ownership" seeding `/config`: the
+  bind-mounted app configuration folder does not support `chown`, so the
+  first-run seeding of `data/`/`public/` now copies files without trying to
+  preserve ownership.
+
 ## 4.0.0-beta.19-r1
 
 - Fix configuration loss on restart/rebuild: the app previously mapped the

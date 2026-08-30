@@ -32,12 +32,14 @@ if [ ! -f "$MIGRATION_MARKER" ]; then
   touch "$MIGRATION_MARKER"
 fi
 
-# Seed defaults on first run (empty persistent folders).
+# Seed defaults on first run (empty persistent folders). Ownership is not
+# preserved because /config is a bind-mounted host folder that does not
+# support chown.
 if [ -d /opt/sonn-data ] && [ -z "$(ls -A "$DATA_DIR" 2>/dev/null)" ]; then
-  cp -a /opt/sonn-data/. "$DATA_DIR/"
+  cp -a --no-preserve=ownership /opt/sonn-data/. "$DATA_DIR/"
 fi
 if [ -d /opt/sonn-public ]; then
-  cp -an /opt/sonn-public/. "$PUBLIC_DIR/"
+  cp -an --no-preserve=ownership /opt/sonn-public/. "$PUBLIC_DIR/"
 fi
 
 rm -rf /app/data /app/public
