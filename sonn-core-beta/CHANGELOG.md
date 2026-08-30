@@ -1,5 +1,14 @@
 # Changelog
 
+## 4.0.0-beta.20-r1
+
+- Fix "Permission denied" errors at startup when linking `/app/data`: our own
+  AppArmor profile was missing the `dac_override`/`dac_read_search`
+  capabilities root needs to modify files owned by the `node` user inside
+  the image (e.g. `/app/public`, `/app/data`). Added the missing
+  capabilities.
+- Add timestamps to app logs.
+
 ## 4.0.0-beta.20
 
 - Track the sonn-audio/core 4.0.0-beta.20 release.

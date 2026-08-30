@@ -8,6 +8,11 @@ profile sonn-core-beta flags=(attach_disconnected,mediate_deleted) {
   capability net_bind_service,
   capability setgid,
   capability setuid,
+  capability dac_override,
+  capability dac_read_search,
+  capability chown,
+  capability fowner,
+  capability fsetid,
   file,
   signal (send) set=(kill,term,int,hup,cont),
 
