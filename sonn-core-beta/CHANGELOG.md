@@ -3,6 +3,17 @@
 ## 4.0.0-beta.20
 
 - Track the sonn-audio/core 4.0.0-beta.20 release.
+- Simplify persistence: drop the `addon_config` folder mapping and the
+  data/public split entirely. `/app/data` is now linked to Home Assistant's
+  private, per-app `/data` folder, which is automatically persistent across
+  restarts, rebuilds, and updates, and included in app backups.
+- `/app/public` is no longer persisted across updates; it always comes from
+  the image. Use sonn-core's built-in backup/restore feature for anything you
+  need to carry across updates.
+- **Upgrade note:** this changes where configuration is stored. Back up your
+  configuration using sonn-core's web UI backup/restore feature before
+  updating from an earlier version, then restore it after the app has
+  restarted with the new version if it does not start pre-configured.
 
 ## 4.0.0-beta.19-r2
 

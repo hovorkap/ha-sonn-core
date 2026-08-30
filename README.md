@@ -11,7 +11,7 @@ The repository currently publishes a single beta app:
 
 Current app version in this repository:
 
-- Beta app: **4.0.0-beta.19**
+- Beta app: **4.0.0-beta.20**
 
 ![sonn-core icon](sonn-core-beta/icon.png)
 
