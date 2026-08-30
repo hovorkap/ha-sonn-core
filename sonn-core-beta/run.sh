@@ -2,7 +2,7 @@
 set -euo pipefail
 
 log() {
-  printf '%s %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*"
+  printf '%s\n' "$*"
 }
 
 # Prefix every log line (including sonn-core's own output) with a

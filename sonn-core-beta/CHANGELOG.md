@@ -1,5 +1,14 @@
 # Changelog
 
+## 4.0.0-beta.20-r2
+
+- Fix duplicated timestamps in logs (the `-r1` release timestamped
+  `run.sh`'s own log lines twice: once in the `log()` helper and once again
+  via the log-prefixing redirection).
+- Added a local Docker-based test harness (`.local-test/`) for verifying
+  startup, restart, rebuild, and fresh-install configuration persistence
+  before releasing changes.
+
 ## 4.0.0-beta.20-r1
 
 - Fix "Permission denied" errors at startup when linking `/app/data`: our own
