@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.0.0-beta.20
+
+- Track the sonn-audio/core 4.0.0-beta.20 release.
+
 ## 4.0.0-beta.19-r2
 
 - Fix startup crash "failed to preserve ownership" seeding `/config`: the
