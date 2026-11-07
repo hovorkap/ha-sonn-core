@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.0.0-beta.23
+
+- Track the sonn-audio/core 4.0.0-beta.23 release.
+
 ## 4.0.0-beta.22
 
 - Track the sonn-audio/core 4.0.0-beta.22 release.
